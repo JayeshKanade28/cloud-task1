@@ -56,6 +56,7 @@ resource "aws_instance" "task1-instance" {
                 sudo systemctl start httpd
                 sudo systemctl enable httpd
                 sudo yum install git -y
+                echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
                 //mkfs.ext4 /dev/xvdf1
                 //mount /dev/xvdf1 /var/www/html
                 //cd /var/www/html
