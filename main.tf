@@ -5,7 +5,7 @@ provider "aws" {
 
 resource "aws_key_pair" "task1-key" {
   key_name   = "task1-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDyK9pfnqNewofxjEFA8S/t6c41GosxHte06yjPnG5ulWrvr1paqP5gJ1w/KBP/8s6RUjwL6idxDFoZbY2ZJL2Xdw98i5iA9m+hFv9E8DucNjJ007EXMtOc2IqlfXoVyqdCcWozGrru0tgrOkn1YXXl5xtT7/tg6zWIrDXBQqpEEp6bfE8qQr1EVY0hFO2tRDOoEwXNjJ+ZqNSxKJMt5VjWSdbBOuAU7HVpJlW8OKAE/31dkhyNV95zel64aQ6zIasI35iiZF1ABXa6JMAR2WaNbDVd3fuNwn2KgQAMfaEdzcRpKv8lw25bZw1qUJBVQfMYreusvtGJIlbKBNfr57vB admin@DESKTOP-6QPGICE"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVdmxLWUskaWuvwZCp52795oi+qvK4qry6ijxYHvFwbipvCRwo4BuoGmVcX/MmiRUyBFvySK0N8YytKCn8NkTMDw37ULJlSzzeQNxWtFdrbpxI5zBdskXY07BKMhDWgDAZHHk4+1BdtqTLBKkHUU1HAR5iDuNuCS52mfkGYAStN95ho/UzIhZLVxXA76oh1H2hV6vrHhpGquZpNxJq0IusSAa58quAaUyRCFpscEcehzZvryVdd2tHQnJ6kYMNPKGCLeLrrl5mchdzYCZoh6E/ern8/VOT6V154xS91B3DrEnIPCENWd8ZawzW28Z1d8ELfFoTSyc6DelErq8fryZB root@localhost.localdomain"
 }
 
 
@@ -44,24 +44,19 @@ resource "aws_security_group" "task1-sg" {
 }
 
 
-
 resource "aws_instance" "task1-instance" {
-  ami 		= "ami-0447a12f28fddb066"
+  ami           = "ami-0447a12f28fddb066"
   instance_type = "t2.micro"
-  key_name 	= "task1-key"
-  security_groups = [ "task1-sg" ] 
+  key_name      = "task1-key"
+  security_groups = [ "task1-sg" ]
   user_data = <<-EOF
                 #! /bin/bash
                 sudo yum install httpd -y
                 sudo systemctl start httpd
                 sudo systemctl enable httpd
                 sudo yum install git -y
-                echo "<h1>Deployed via Terraform</h1>" | sudo tee /var/www/html/index.html
-                //mkfs.ext4 /dev/xvdf1
-                //mount /dev/xvdf1 /var/www/html
-                //cd /var/www/html
-                //git clone https://github.com/prachi-07/cloud-task1.git
-                
+
+
   EOF
 
   tags = {
@@ -81,6 +76,6 @@ resource "aws_ebs_volume" "task1-ebs" {
 
 resource "aws_volume_attachment" "task1-attach" {
   device_name = "/dev/sdf"
-  volume_id   = "${aws_ebs_volume.task1-ebs.id}"
-  instance_id = "${aws_instance.task1-instance.id}"
+  volume_id   = aws_ebs_volume.task1-ebs.id
+  instance_id = aws_instance.task1-instance.id
 }
